@@ -1,0 +1,12 @@
+{
+  "Enable": [
+    "vet",
+    "golint",
+    "ineffassign",
+    "unconvert",
+    "maligned",
+    "deadcode",
+    "misspell",
+    "varcheck"
+  ]
+}
