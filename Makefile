@@ -41,13 +41,7 @@ help: ##prints help
 install: ##@deps Install dependencies
 	@echo "${YELLOW}Installing dependencies${RESET}"
 	go get ${INSTALL_OPTS} gopkg.in/alecthomas/gometalinter.v2
-	go get ${INSTALL_OPTS} github.com/golang/lint
-	go get ${INSTALL_OPTS} github.com/mdempsky/unconvert
-	go get ${INSTALL_OPTS} github.com/tsenart/deadcode
-	go get ${INSTALL_OPTS} github.com/gordonklaus/ineffassign
-	go get ${INSTALL_OPTS} github.com/mdempsky/maligned
-	go get ${INSTALL_OPTS} github.com/opennota/check
-	go get ${INSTALL_OPTS} github.com/client9/misspell/cmd/misspell
+	gometalinter.v2 --install
 	go list -f '{{range .Imports}}{{.}} {{end}}' ./... | xargs go get ${INSTALL_OPTS}
 	go list -f '{{range .TestImports}}{{.}} {{end}}' ./... | xargs go get ${INSTALL_OPTS}
 	@echo "${GREEN}✔ successfully installed dependencies${RESET}\n"

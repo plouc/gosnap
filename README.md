@@ -1,5 +1,6 @@
 # gosnap
 
+[![Build Status](https://travis-ci.org/plouc/gosnap.png?branch=master)](https://travis-ci.org/plouc/gosnap)
 [![GoDoc](https://godoc.org/github.com/plouc/gosnap?status.svg)](https://godoc.org/github.com/plouc/gosnap)
 [![GitHub license](https://img.shields.io/github/license/plouc/gosnap.svg)](https://github.com/plouc/gosnap/blob/master/LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/plouc/gosnap)](https://goreportcard.com/report/github.com/plouc/gosnap)

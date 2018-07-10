@@ -46,9 +46,9 @@ func (c *Context) ensureDir() error {
 }
 
 // NewSnapshot creates a new snapshot attached to context
-func (c *Context) NewSnapshot(n string) *Snapshot {
+func (c *Context) NewSnapshot(name string) *Snapshot {
 	return &Snapshot{
-		Name: n,
+		Name: name,
 		ctx:  c,
 	}
 }

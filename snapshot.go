@@ -68,7 +68,12 @@ func (s *Snapshot) Content() (string, error) {
 
 // Update writes given content to disk and refresh content
 func (s *Snapshot) Update(c string) error {
-	err := ioutil.WriteFile(s.FilePath(), []byte(c), s.ctx.FileMode)
+	err := s.ctx.ensureDir()
+	if err != nil {
+		return err
+	}
+
+	err = ioutil.WriteFile(s.FilePath(), []byte(c), s.ctx.FileMode)
 	if err != nil {
 		return err
 	}
