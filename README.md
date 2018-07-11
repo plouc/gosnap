@@ -53,10 +53,10 @@ update it, you can add a command-line flag to the `go test command` to do so:
 
 ```
 # will update all stale snapshots
-go test -v -update all ./...
+go test -v ./... -args -update all
 
 # will just update snapshot whose name is `my_snapshot`
-go test -v -update my_snapshot ./...
+go test -v ./... -args -update my_snapshot
 ```
 
 For complete usage of **gosnap**, see the full [package docs](https://godoc.org/github.com/plouc/gosnap).
