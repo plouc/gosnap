@@ -2,6 +2,7 @@ package gosnap
 
 import (
 	"fmt"
+	"github.com/fatih/color"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -84,21 +85,44 @@ func (s *Snapshot) Update(c string) error {
 	return nil
 }
 
+const assertionErrorText = `
+snapshot '%s' does not match (%s)
+
+%s
+
+please pass '-update %s' or '-update all' to the test command
+in order to update the snapshot.
+
+`
+
 // AssertString test given string against stored content
 func (s *Snapshot) AssertString(expected string) {
+	s.ctx.t.Helper()
+
 	c, err := s.Content()
 	if err != nil {
-		s.ctx.t.Error(err)
-		s.ctx.t.FailNow()
-	}
-
-	if c != expected {
-		if s.ctx.AutoUpdate {
-			fmt.Printf("updated snapshot: %s\n", s.FileName())
-			s.Update(expected)
+		if !os.IsNotExist(err) {
+			s.ctx.t.Error(err)
+			s.ctx.t.FailNow()
 			return
 		}
 
-		s.ctx.t.Errorf("Snapshot does not match: %s\n%s", s.FilePath(), StringsDiff(expected, c))
+		s.Update(expected)
+		s.ctx.t.Log(color.YellowString("created snapshot: %s", s.FileName()))
+		return
+	}
+
+	if c != expected {
+		if s.ctx.shouldUpdateSnapshot(s) {
+			s.Update(expected)
+			s.ctx.t.Log(color.YellowString("updated snapshot: %s", s.FileName()))
+			return
+		}
+
+		s.ctx.t.Errorf(
+			color.RedString(
+				fmt.Sprintf(assertionErrorText, s.Name, s.FilePath(), StringsDiff(expected, c), s.Name),
+			),
+		)
 	}
 }

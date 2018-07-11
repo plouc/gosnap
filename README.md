@@ -38,7 +38,7 @@ func TestSomething(t *testing.T) {
     // it will be stored in `snapshots/my_first_snapshot.snap`
     s := ctx.NewSnapshot("my_first_snapshot")
     
-    actual := whatever.DoSomethingWhichReturnsString()
+    actual := DoSomethingWhichReturnsString()
     
     // this will load the snapshot content and check it matches `actual`
     s.AssertString(actual)
@@ -46,5 +46,17 @@ func TestSomething(t *testing.T) {
 ````
 
 This will check that `actual` matches current snapshot (`./snapshots/my_first_snapshot.snap`) content.
+
+The first time you run your tests, the snapshot will be created automatically,
+then if the current result does not match snapshot's content, you'll have to
+update it, you can add a command-line flag to the `go test command` to do so:
+
+```
+# will update all stale snapshots
+go test -v -update all ./...
+
+# will just update snapshot whose name is `my_snapshot`
+go test -v -update my_snapshot ./...
+```
 
 For complete usage of **gosnap**, see the full [package docs](https://godoc.org/github.com/plouc/gosnap).
