@@ -8,10 +8,43 @@
 
 **gosnap** is a go package to perform snapshot testing.
 
+Snapshot testing is a convenient way to test large outputs with ease,
+this package was initially created to test the [`go-gitlab-client` CLI](https://github.com/plouc/go-gitlab-client).
+
 ## Install
 
 ```
 go get github.com/plouc/gosnap
 ```
+
+## Usage
+
+**gosnap** requires a context to run, from which you can create snapshots.
+
+````go
+package whatever
+
+import (
+    "testing"
+    "github.com/plouc/gosnap"
+)
+
+func TestSomething(t *testing.T) {
+    // creates a new context
+    // snapshots will be stored inside the `snapshots` directory
+    ctx := gosnap.NewContext(t, "snapshots")
+
+    // creates a new snapshot
+    // it will be stored in `snapshots/my_first_snapshot.snap`
+    s := ctx.NewSnapshot("my_first_snapshot")
+    
+    actual := whatever.DoSomethingWhichReturnsString()
+    
+    // this will load the snapshot content and check it matches `actual`
+    s.AssertString(actual)
+}
+````
+
+This will check that `actual` matches current snapshot (`./snapshots/my_first_snapshot.snap`) content.
 
 For complete usage of **gosnap**, see the full [package docs](https://godoc.org/github.com/plouc/gosnap).
