@@ -93,6 +93,12 @@ func (s *Snapshot) AssertString(expected string) {
 	}
 
 	if c != expected {
+		if s.ctx.AutoUpdate {
+			fmt.Printf("updated snapshot: %s\n", s.FileName())
+			s.Update(expected)
+			return
+		}
+
 		s.ctx.t.Errorf("Snapshot does not match: %s\n%s", s.FilePath(), StringsDiff(expected, c))
 	}
 }

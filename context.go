@@ -13,6 +13,7 @@ type Context struct {
 	DirMode       os.FileMode
 	FileMode      os.FileMode
 	FileExtension string
+	AutoUpdate    bool
 }
 
 // NewContext creates a new snapshot testing context
@@ -23,6 +24,7 @@ func NewContext(t *testing.T, d string) *Context {
 		DirMode:       0755,
 		FileMode:      0644,
 		FileExtension: ".snap",
+		AutoUpdate:    false,
 	}
 }
 
