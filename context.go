@@ -3,6 +3,7 @@ package gosnap
 import (
 	"flag"
 	"fmt"
+	"github.com/fatih/color"
 	"os"
 	"strings"
 	"testing"
@@ -19,6 +20,7 @@ type Context struct {
 	FileExtension       string
 	AutoUpdate          bool
 	AutoUpdateSnapshots []string
+	snapshots           map[string]*Snapshot
 }
 
 // NewContext creates a new snapshot testing context
@@ -44,6 +46,7 @@ func NewContext(t *testing.T, d string) *Context {
 		FileMode:      0644,
 		FileExtension: ".snap",
 		AutoUpdate:    updateSnapshots == "all",
+		snapshots:     map[string]*Snapshot{},
 	}
 
 	if updateSnapshots != "" && updateSnapshots != "all" {
@@ -72,6 +75,7 @@ func (c *Context) ensureDir() error {
 	}
 }
 
+// shouldUpdateSnapshot checks if given snapshot should be automatically updated
 func (c *Context) shouldUpdateSnapshot(s *Snapshot) bool {
 	if c.AutoUpdate {
 		return true
@@ -86,17 +90,29 @@ func (c *Context) shouldUpdateSnapshot(s *Snapshot) bool {
 	return false
 }
 
-// NewSnapshot creates a new snapshot attached to context
+// NewSnapshot creates a new snapshot attached to context.
+// If a snapshot with the same name already exists, test will fail.
 func (c *Context) NewSnapshot(name string) *Snapshot {
-	return &Snapshot{
+	_, snapshotAlreadyExists := c.snapshots[name]
+	if snapshotAlreadyExists {
+		c.t.Errorf(color.RedString("snapshot %s already exists", name))
+		c.t.FailNow()
+		return nil
+	}
+
+	s := Snapshot{
 		Name: name,
 		ctx:  c,
 	}
+
+	c.snapshots[name] = &s
+
+	return &s
 }
 
 func init() {
-	flag.StringVar(&updateSnapshots, "update", "whatever", "do whatever")
-	flag.StringVar(&updateSnapshots, "u", "whatever", "do whatever")
+	flag.StringVar(&updateSnapshots, "update", "", "update generated snapshots")
+	flag.StringVar(&updateSnapshots, "u", "", "update generated snapshots")
 
 	flag.Parse()
 }
