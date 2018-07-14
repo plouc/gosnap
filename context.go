@@ -90,17 +90,22 @@ func (c *Context) shouldUpdateSnapshot(s *Snapshot) bool {
 	return false
 }
 
-// HasSnapshot checks if a snapshot with the given name already exists
-func (c *Context) HasSnapshot(name string) bool {
+// Has checks if a snapshot with the given name already exists
+func (c *Context) Has(name string) bool {
 	_, ok := c.snapshots[name]
 
 	return ok
 }
 
+// Get returns a snapshot by its name
+func (c *Context) Get(name string) *Snapshot {
+	return c.snapshots[name]
+}
+
 // NewSnapshot creates a new snapshot attached to context.
 // If a snapshot with the same name already exists, test will fail.
 func (c *Context) NewSnapshot(name string) *Snapshot {
-	if c.HasSnapshot(name) {
+	if c.Has(name) {
 		c.t.Errorf(color.RedString("snapshot %s already exists", name))
 		c.t.FailNow()
 		return nil
